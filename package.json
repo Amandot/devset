@@ -1,0 +1,65 @@
+{
+  "name": "devstart",
+  "version": "1.0.2",
+  "description": "Universal, rule-based project analysis and automated environment setup tool",
+  "author": "DevStart Team",
+  "license": "MIT",
+  "keywords": [
+    "cli",
+    "project-setup",
+    "environment-setup",
+    "developer-tooling",
+    "automation",
+    "monorepo",
+    "fullstack",
+    "dev-environment"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "devstart": "dist/cli.js",
+    "devstart-cli": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "docs"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "start": "node ./dist/cli.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm run test"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "cli-table3": "^0.6.5",
+    "commander": "^13.1.0",
+    "execa": "^9.5.2",
+    "fast-glob": "^3.3.3",
+    "inquirer": "^12.4.2",
+    "ora": "^8.2.0",
+    "strip-ansi": "^7.1.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "tests"
+  }
+}
