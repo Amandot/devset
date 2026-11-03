@@ -66,6 +66,28 @@ export async function setupCommand(
   // Generate Setup Plan
   const plan = PlanGenerator.generate(analysis);
 
+  if (plan.steps.length === 0) {
+    console.log();
+    logger.success('No setup changes required. Project is already configured!');
+
+    if (plan.runCommands.length > 0) {
+      ServiceRunner.saveConfig(rootDir, analysis.projectName, plan.runCommands);
+
+      console.log();
+      console.log(chalk.bold.cyan('Configured Services:'));
+      for (const svc of plan.runCommands) {
+        console.log(`  • ${chalk.bold(svc.name)}: ${svc.command} ${(svc.args || []).join(' ')} (in ${svc.directory})`);
+      }
+
+      console.log();
+      logger.info('To start all services together, run:');
+      console.log(chalk.bold.green('   devset run'));
+      console.log(chalk.dim('   or'));
+      console.log(chalk.bold.green('   npm run dev:all'));
+    }
+    return;
+  }
+
   logger.section('SETUP PLAN');
   plan.steps.forEach((step, idx) => {
     console.log(`  ${idx + 1}. ${chalk.bold(step.title)}`);

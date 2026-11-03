@@ -69,14 +69,20 @@ USER CLI INPUT (`devset`, `devset analyze`, `devset setup`)
 - Marks technologies as **confirmed** if score >= threshold, or **possible** if above minScoreForPossible.
 
 ### 3.3 Core Plan Generator (`src/core/plan-generator.ts`)
-Creates a JSON-serializable `SetupPlan` comprising:
+Creates a JSON-serializable `SetupPlan` dynamically based on filesystem state:
 1. **Runtime Verification**: Checks that required interpreters (Node, Python, Java) exist on the machine.
-2. **Environment Setup**: Safely copies `.env.example` to `.env` if missing, without exposing secret values.
-3. **Virtual Environments**: Initiates isolated `.venv` directories for Python components.
-4. **Dependency Installation**: Executes frozen/deterministic installation commands in each component's directory.
+2. **Environment Setup**: Safely copies `.env.example` to `.env` if missing, preserving existing `.env` files without overwriting.
+3. **Virtual Environments**: Reuses existing `.venv` or `venv` environments; only creates a new environment if absent or invalid.
+4. **Dependency Installation**: Checks whether declared dependencies are already satisfied using pip dry-run and package metadata; skips installation when up to date.
 5. **Validation**: Verifies post-installation file integrity.
+If no setup changes are required, PlanGenerator produces an empty step list, allowing the CLI to confirm that the project is already configured.
 
-### 3.4 Multi-Service Process Manager (`src/runner/process-manager.ts`)
+### 3.4 Dependency Validator (`src/validators/dependency-validator.ts`)
+- Discovers existing virtual environments (`.venv`, `venv`) across platforms (`Scripts/python.exe` on Windows, `bin/python` on Linux/macOS).
+- Validates requirements against virtual environment packages using pip `--dry-run` and distribution metadata (`importlib.metadata`, `site-packages`).
+- Flags package conflicts (`pip check`) and manifests missing dependencies.
+
+### 3.5 Multi-Service Process Manager (`src/runner/process-manager.ts`)
 - Spawns child processes using safe argument arrays.
 - Employs streaming stdout/stderr with styled prefixes: `[FRONTEND]`, `[BACKEND]`.
 - Monitors output streams for URL patterns (`http://localhost:5173`, `http://127.0.0.1:8000`).

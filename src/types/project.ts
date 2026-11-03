@@ -85,6 +85,12 @@ export interface ProjectComponent {
     examples: string[];
     missingVariables: string[];
   };
+  virtualEnv?: {
+    exists: boolean;
+    path?: string;
+    pythonPath?: string;
+  };
+  dependenciesInstalled?: boolean;
 }
 
 export interface EnvironmentAnalysis {

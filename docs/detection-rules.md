@@ -70,3 +70,29 @@ DevSet CLI replaces opaque heuristics with a **deterministic scoring matrix**. E
 | 6 | `uv.lock` | `uv sync` | `uv sync` |
 | 7 | `Pipfile.lock` | `pipenv install` | `pipenv install` |
 | 8 | `requirements.txt` | `python -m pip install -r requirements.txt` | - |
+
+---
+
+## 5. Virtual Environment & Dependency Satisfaction Detection
+
+DevSet CLI enforces strict idempotency to prevent repeated environment creations and duplicate package installations.
+
+### 5.1 Virtual Environment Detection
+- **Detected Directory Names**: `.venv` and `venv`.
+- **Executable Resolution**:
+  - Windows: `Scripts/python.exe`
+  - Linux/macOS: `bin/python`
+- **Reuse Policy**: When a valid virtual environment directory with an executable Python binary is found, DevSet CLI reuses it without recreation, deletion, or overwriting.
+
+### 5.2 Dependency Satisfaction Detection
+- **Manifest Inspection**: Inspects `requirements.txt`, `pyproject.toml`, and `Pipfile`.
+- **Validation Engine**:
+  - Uses the virtual environment's Python executable.
+  - Validates requirements using pip's `--dry-run` resolution mode (`python -m pip install --dry-run -r requirements.txt`).
+  - Verifies installed packages and version constraints (`==`, `>=`, `<=`, `~=`, etc.) against Python distribution metadata (`importlib.metadata` and `site-packages`).
+  - Runs `pip check` to detect and surface dependency conflicts clearly.
+- **Dynamic Plan Generation**:
+  - Skips virtual environment creation if a valid environment already exists.
+  - Skips dependency installation if all declared dependencies are satisfied.
+  - Preserves existing `.env` configuration files.
+  - If all components are satisfied and configured, DevSet reports: `No setup changes required. Project is already configured!`

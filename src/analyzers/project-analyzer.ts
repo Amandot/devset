@@ -9,6 +9,8 @@ import { DockerDetector } from '../detectors/docker-detector.js';
 import { EnvironmentDetector } from '../detectors/environment-detector.js';
 import { DependencyAnalyzer } from './dependency-analyzer.js';
 import { StructureAnalyzer } from './structure-analyzer.js';
+import { DependencyValidator } from '../validators/dependency-validator.js';
+import { dirExists } from '../utils/filesystem.js';
 import type {
   ProjectAnalysis,
   ProjectComponent,
@@ -92,6 +94,33 @@ export class ProjectAnalyzer {
         .filter(f => ['package.json', 'requirements.txt', 'pyproject.toml', 'Pipfile', 'pom.xml', 'build.gradle', 'Cargo.toml'].includes(f.fileName))
         .map(f => f.relativePath);
 
+      let virtualEnv: ProjectComponent['virtualEnv'];
+      let dependenciesInstalled = false;
+
+      if (langResult.primary === 'python') {
+        const venv = DependencyValidator.findVirtualEnv(compDir);
+        virtualEnv = venv
+          ? { exists: true, path: venv.dir, pythonPath: venv.pythonPath }
+          : { exists: false };
+
+        const depCheck = await DependencyValidator.checkPythonDependencies(
+          compDir,
+          comp.files.map(f => f.fileName),
+          venv?.pythonPath
+        );
+
+        dependenciesInstalled = depCheck.satisfied;
+
+        if (depCheck.conflicts.length > 0) {
+          warnings.push(
+            ...depCheck.conflicts.map(c => `Dependency conflict in [${comp.relativePath}]: ${c}`)
+          );
+        }
+      } else if (comp.files.some(f => f.fileName === 'package.json')) {
+        const nodeModules = path.join(compDir, 'node_modules');
+        dependenciesInstalled = dirExists(nodeModules);
+      }
+
       const componentObj: ProjectComponent = {
         id: comp.relativePath === '.' ? 'root' : comp.relativePath.replace(/[\\/]/g, '-'),
         name: comp.name,
@@ -114,6 +143,8 @@ export class ProjectAnalyzer {
           examples: envResult.exampleEnvFiles,
           missingVariables: envResult.missingVariables,
         },
+        virtualEnv,
+        dependenciesInstalled,
       };
 
       components.push(componentObj);

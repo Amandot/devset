@@ -4,6 +4,7 @@ import type { SetupStep } from '../types/setup-plan.js';
 import type { CommandResult } from '../utils/process.js';
 import { fileExists, dirExists } from '../utils/filesystem.js';
 import { RuntimeValidator } from '../validators/runtime-validator.js';
+import { DependencyValidator } from '../validators/dependency-validator.js';
 
 export class PythonInstaller extends BaseInstaller {
   canHandle(step: SetupStep): boolean {
@@ -21,19 +22,11 @@ export class PythonInstaller extends BaseInstaller {
   }
 
   /**
-   * Get virtual environment python binary path
+   * Get virtual environment python binary path (.venv or venv)
    */
   static getVenvPython(componentDir: string): string | null {
-    const isWin = process.platform === 'win32';
-    const venvDir = path.join(componentDir, '.venv');
-
-    if (!dirExists(venvDir)) return null;
-
-    const bin = isWin
-      ? path.join(venvDir, 'Scripts', 'python.exe')
-      : path.join(venvDir, 'bin', 'python');
-
-    return fileExists(bin) ? bin : null;
+    const venv = DependencyValidator.findVirtualEnv(componentDir);
+    return venv ? venv.pythonPath : null;
   }
 
   async execute(step: SetupStep, context: InstallContext): Promise<CommandResult> {
@@ -41,6 +34,17 @@ export class PythonInstaller extends BaseInstaller {
 
     // Case 1: Create virtual environment
     if (step.category === 'virtual-environment') {
+      const existing = DependencyValidator.findVirtualEnv(fullDir);
+      if (existing) {
+        return {
+          stdout: `Reusing existing virtual environment at ${existing.dir}`,
+          stderr: '',
+          exitCode: 0,
+          success: true,
+          durationMs: 0,
+        };
+      }
+
       const pyCheck = await RuntimeValidator.checkPython();
       const pythonCmd = pyCheck.executablePath || 'python';
 
@@ -57,7 +61,9 @@ export class PythonInstaller extends BaseInstaller {
 
     if (step.command?.includes('pip')) {
       const pythonExe = venvPy || 'python';
-      const args = ['-m', 'pip', 'install', '-r', 'requirements.txt'];
+      const match = step.command.match(/-r\s+([^\s]+)/);
+      const reqFile = match ? match[1] : 'requirements.txt';
+      const args = ['-m', 'pip', 'install', '-r', reqFile];
 
       // Also upgrade pip quietly if needed
       return await this.executeCommand(pythonExe, args, fullDir, context);
