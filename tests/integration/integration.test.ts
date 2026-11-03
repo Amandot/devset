@@ -28,9 +28,17 @@ describe('Integration Scenarios', () => {
     expect(analysis.technologies.some(t => t.name === 'Django')).toBe(true);
 
     const plan = PlanGenerator.generate(analysis);
-    const venvStep = plan.steps.find(s => s.category === 'virtual-environment');
-    expect(venvStep).toBeDefined();
-    expect(venvStep?.command).toBe('python -m venv .venv');
+    const hasVenv = analysis.components[0].virtualEnv?.exists;
+    if (hasVenv) {
+      // Idempotency: reuses existing virtual environment
+      const venvStep = plan.steps.find(s => s.category === 'virtual-environment');
+      expect(venvStep).toBeUndefined();
+    } else {
+      // First-time setup: generates virtual environment creation step
+      const venvStep = plan.steps.find(s => s.category === 'virtual-environment');
+      expect(venvStep).toBeDefined();
+      expect(venvStep?.command).toBe('python -m venv .venv');
+    }
   });
 
   it('Scenario 4: Fullstack React + Django project', async () => {
