@@ -1,8 +1,8 @@
 {
-  "name": "devstart",
-  "version": "1.0.2",
+  "name": "devset",
+  "version": "1.0.0",
   "description": "Universal, rule-based project analysis and automated environment setup tool",
-  "author": "DevStart Team",
+  "author": "Devset Team",
   "license": "MIT",
   "keywords": [
     "cli",
@@ -18,14 +18,16 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "devstart": "dist/cli.js",
-    "devstart-cli": "dist/cli.js"
+    "devset": "dist/cli.js",
+    "devset-cli": "dist/cli.js"
   },
   "files": [
     "dist",
+    "src",
+    "tests",
+    "docs",
     "README.md",
-    "LICENSE",
-    "docs"
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsup",

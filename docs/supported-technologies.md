@@ -1,4 +1,4 @@
-# DevStart CLI — Supported Technologies
+# DevSet CLI — Supported Technologies
 
 | Technology | Category | Detection | Automated Installation | Unified Runner |
 |---|---|---|---|---|

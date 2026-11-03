@@ -1,6 +1,6 @@
-# DevStart CLI — Security & Reliability Guidelines
+# DevSet CLI — Security & Reliability Guidelines
 
-Security and environment safety are non-negotiable foundations of DevStart CLI.
+Security and environment safety are non-negotiable foundations of DevSet CLI.
 
 ---
 
@@ -14,15 +14,15 @@ Security and environment safety are non-negotiable foundations of DevStart CLI.
 
 ## 2. Safe Subprocess Execution
 
-- **Argument Array Execution**: DevStart never passes untrusted shell strings or performs string interpolation into shell commands (`execa(file, args[])`).
-- **No Unvetted Script Execution**: DevStart never automatically executes arbitrary preinstall, postinstall, or arbitrary scripts declared in untrusted files during analysis.
+- **Argument Array Execution**: DevSet never passes untrusted shell strings or performs string interpolation into shell commands (`execa(file, args[])`).
+- **No Unvetted Script Execution**: DevSet never automatically executes arbitrary preinstall, postinstall, or arbitrary scripts declared in untrusted files during analysis.
 - **Cross-Platform Path Resolution**: On Windows, `.cmd` and `.bat` wrappers (such as `npm.cmd` or `mvnw.cmd`) are resolved safely without invoking raw arbitrary command lines.
 
 ---
 
 ## 3. Secret & Environment Protection
 
-- **No Secret Printing**: DevStart scans `.env` and `.env.example` solely to extract variable keys (`KEY=`). It never prints, logs, or transmits secret values.
+- **No Secret Printing**: DevSet scans `.env` and `.env.example` solely to extract variable keys (`KEY=`). It never prints, logs, or transmits secret values.
 - **Non-Destructive Environment Creation**: Existing `.env` files are **never overwritten**.
 - **User Consent Required**: If `.env.example` exists and `.env` is absent, `.env` is created only with user confirmation.
 
@@ -33,4 +33,4 @@ Security and environment safety are non-negotiable foundations of DevStart CLI.
 - **Symlink Protection**: The file scanner does not blindly follow circular symbolic links.
 - **Directory Traversal Defense**: All relative component paths are validated against `projectRoot` using `path.resolve` to prevent directory traversal attacks.
 - **Bounded Resource Limits**: Maximum scan depth (default 6 levels) and file count bounds (default 10,000 files) prevent resource exhaustion on large repositories.
-- **Non-Destructive Cleanup (`devstart clean`)**: Only targeted, generated files (`devstart.config.json` and `.venv` directories) can be cleaned, and only after explicit interactive user confirmation. Source code and dependencies are never touched.
+- **Non-Destructive Cleanup (`devset clean`)**: Only targeted, generated files (`devset.config.json` and `.venv` directories) can be cleaned, and only after explicit interactive user confirmation. Source code and dependencies are never touched.

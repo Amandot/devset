@@ -15,7 +15,7 @@ import {
 const program = new Command();
 
 program
-  .name('devstart')
+  .name('devset')
   .description('Universal, rule-based project analysis and automated environment setup tool')
   .version('1.0.0');
 
@@ -25,7 +25,7 @@ program.addOption(verboseOption);
 program.addOption(yesOption);
 program.addOption(jsonOption);
 
-// Default action: devstart [path]
+// Default action: devset [path]
 program
   .argument('[directory]', 'Target project directory', '.')
   .action(async (directory, cmdOpts, cmd) => {
@@ -82,7 +82,7 @@ program
 // clean command
 program
   .command('clean')
-  .description('Safely remove DevStart-generated virtual environments and configuration files after confirmation')
+  .description('Safely remove DevSet-generated virtual environments and configuration files after confirmation')
   .addOption(yesOption)
   .action(async (cmdOpts, cmd) => {
     const opts = { ...program.opts(), ...(cmdOpts || {}), ...(cmd?.opts() || {}) };

@@ -8,7 +8,7 @@ Thumbs.db
 venv/
 __pycache__/
 *.pyc
-devstart-cli.zip
-devstart.config.json
-.devstart/
+devset-cli.zip
+devset.config.json
+.devset/
 examples/

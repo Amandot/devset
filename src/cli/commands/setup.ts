@@ -129,7 +129,7 @@ export async function setupCommand(
           {
             type: 'confirm',
             name: 'addScript',
-            message: 'Add "dev:all": "devstart run" script to package.json for unified startup?',
+            message: 'Add "dev:all": "devset run" script to package.json for unified startup?',
             default: true,
           },
         ]);
@@ -142,7 +142,7 @@ export async function setupCommand(
 
       console.log();
       logger.info('To start all services together, run:');
-      console.log(chalk.bold.green('   devstart run'));
+      console.log(chalk.bold.green('   devset run'));
       console.log(chalk.dim('   or'));
       console.log(chalk.bold.green('   npm run dev:all'));
     }

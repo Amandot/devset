@@ -1,4 +1,4 @@
-# DevStart CLI
+# DevSet CLI
 
 > **One Command. Complete Setup.**  
 > Universal, deterministic, rule-based project analysis and automated environment setup tool.
@@ -21,15 +21,15 @@ Whenever developers clone a full-stack repository or multi-service codebase, the
 5. Identifying missing environment variables.
 6. Opening multiple terminals to start each service individually.
 
-**DevStart CLI automates this entire workflow safely, locally, and deterministically.**
+**DevSet CLI automates this entire workflow safely, locally, and deterministically.**
 
 ```bash
 # Clone any repo
 git clone https://github.com/example/fullstack-app.git
 cd fullstack-app
 
-# Run DevStart
-npx devstart-cli
+# Run DevSet
+npx devset-cli
 
 # Start all services together
 npm run dev:all
@@ -44,9 +44,9 @@ npm run dev:all
 - **Deterministic Package Management**: Automatically honors lockfiles (`npm ci`, `yarn install --frozen-lockfile`, `pnpm install --frozen-lockfile`, `bun install --frozen-lockfile`) and alerts on conflicting lockfiles.
 - **Isolated Python Virtual Environments**: Automatically creates `.venv` on Windows (`.venv\Scripts\python.exe`) and POSIX (`.venv/bin/python`), installing dependencies inside the virtualenv without polluting system Python.
 - **Safe Environment Auditing**: Compares `.env.example` against `.env` to highlight missing keys **without ever exposing secret values**.
-- **Universal Multi-Service Runner**: `devstart run` starts frontend and backend services concurrently with formatted, colored prefix logs (`[FRONTEND]`, `[BACKEND]`), live URL detection, and graceful process tree termination on `Ctrl+C`.
+- **Universal Multi-Service Runner**: `devset run` starts frontend and backend services concurrently with formatted, colored prefix logs (`[FRONTEND]`, `[BACKEND]`), live URL detection, and graceful process tree termination on `Ctrl+C`.
 - **Safe Simulation**: Built-in `--dry-run` flag to preview setup steps without making changes.
-- **System Doctor**: Built-in `devstart doctor` diagnostics for installed runtimes (Node, Python, Java, Docker, Git).
+- **System Doctor**: Built-in `devset doctor` diagnostics for installed runtimes (Node, Python, Java, Docker, Git).
 
 ---
 
@@ -54,7 +54,7 @@ npm run dev:all
 
 ```text
 ╔════════════════════════════════════════════════╗
-║                  DEVSTART CLI                  ║
+║                   DEVSET CLI                   ║
 ║          One Command. Complete Setup.          ║
 ╚════════════════════════════════════════════════╝
 
@@ -103,12 +103,12 @@ SETUP PLAN
 
 | Command | Description |
 |---|---|
-| `devstart` (or `npx devstart-cli`) | Scan project, generate plan, and perform automated setup upon approval |
-| `devstart analyze [dir]` | In-depth scan and tabular report of languages, frameworks, and manifests |
-| `devstart setup [dir]` | Execute automated dependency setup |
-| `devstart doctor` | Check health and versions of Node, Python, package managers, and tools |
-| `devstart run` | Concurrently run all configured development services with unified logs |
-| `devstart clean` | Safely remove DevStart-generated `.venv` and config files after confirmation |
+| `devset` (or `npx devset-cli`) | Scan project, generate plan, and perform automated setup upon approval |
+| `devset analyze [dir]` | In-depth scan and tabular report of languages, frameworks, and manifests |
+| `devset setup [dir]` | Execute automated dependency setup |
+| `devset doctor` | Check health and versions of Node, Python, package managers, and tools |
+| `devset run` | Concurrently run all configured development services with unified logs |
+| `devset clean` | Safely remove DevSet-generated `.venv` and config files after confirmation |
 
 ### Global Options
 
@@ -123,7 +123,7 @@ SETUP PLAN
 
 ## Architecture Overview
 
-DevStart follows a strict modular separation:
+DevSet follows a strict modular separation:
 
 ```text
 src/
@@ -162,8 +162,8 @@ See [docs/supported-technologies.md](docs/supported-technologies.md) for the com
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/devstart-cli.git
-cd devstart-cli
+git clone https://github.com/your-username/devset-cli.git
+cd devset-cli
 
 # Install development dependencies
 npm install
@@ -178,15 +178,15 @@ npm test
 npm link
 
 # Test CLI
-devstart --help
-devstart doctor
+devset --help
+devset doctor
 ```
 
 ---
 
 ## Publishing to NPM
 
-DevStart CLI is preconfigured for NPM publishing:
+DevSet CLI is preconfigured for NPM publishing:
 
 ```bash
 # 1. Login to NPM
@@ -203,10 +203,10 @@ npm publish --access public
 
 ## Security
 
-DevStart executes commands with strict argument arrays (`execa(file, args[])`), validates paths against directory traversal, never logs secrets or tokens, and never automatically deletes files. Read our [docs/security.md](docs/security.md) for complete details.
+DevSet executes commands with strict argument arrays (`execa(file, args[])`), validates paths against directory traversal, never logs secrets or tokens, and never automatically deletes files. Read our [docs/security.md](docs/security.md) for complete details.
 
 ---
 
 ## License
 
-MIT © [DevStart Maintainers](LICENSE)
+MIT © [DevSet Maintainers](LICENSE)

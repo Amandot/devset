@@ -1,8 +1,8 @@
-# DevStart CLI — Architecture Documentation
+# DevSet CLI — Architecture Documentation
 
 ## 1. Architectural Philosophy
 
-DevStart CLI is designed as a **deterministic, rule-based, locally executed project analysis and environment automation tool**.
+DevSet CLI is designed as a **deterministic, rule-based, locally executed project analysis and environment automation tool**.
 
 ### Core Tenets
 - **Zero AI / Zero External API**: Complete privacy and reliability without cloud dependence, API tokens, or model hallucinations.
@@ -15,7 +15,7 @@ DevStart CLI is designed as a **deterministic, rule-based, locally executed proj
 ## 2. System Pipeline
 
 ```text
-USER CLI INPUT (`devstart`, `devstart analyze`, `devstart setup`)
+USER CLI INPUT (`devset`, `devset analyze`, `devset setup`)
   │
   ▼
 [PROJECT SCANNER]
@@ -51,7 +51,7 @@ USER CLI INPUT (`devstart`, `devstart analyze`, `devstart setup`)
   └─ Dependency Validator (verifies node_modules, .venv site-packages)
   │
   ▼
-[PROCESS RUNNER] (`devstart run` / `npm run dev:all`)
+[PROCESS RUNNER] (`devset run` / `npm run dev:all`)
   └─ Concurrently runs multiple services with colored prefixes & URL detection
 ```
 

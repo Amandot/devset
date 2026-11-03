@@ -43,7 +43,7 @@ export class ProcessManager {
       return;
     }
 
-    logger.banner('DEVSTART - MULTI-SERVICE RUNNER', 'Press Ctrl+C to stop all services');
+    logger.banner('DEVSET - MULTI-SERVICE RUNNER', 'Press Ctrl+C to stop all services');
 
     this.registerSignalHandlers();
 

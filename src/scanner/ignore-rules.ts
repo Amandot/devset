@@ -27,7 +27,7 @@ export const DEFAULT_IGNORE_DIRECTORIES = [
   'obj', // .NET
   '.idea',
   '.vscode',
-  '.devstart',
+  '.devset',
   'tmp',
   'temp',
   '.turbo',

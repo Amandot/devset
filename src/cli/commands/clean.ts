@@ -10,13 +10,13 @@ import type { GlobalCliOptions } from '../options.js';
 export async function cleanCommand(options: GlobalCliOptions = {}): Promise<void> {
   const projectRoot = process.cwd();
   showBanner();
-  logger.info('Scanning for DevStart artifacts and generated virtual environments...');
+  logger.info('Scanning for DevSet artifacts and generated virtual environments...');
 
   const targets: Array<{ label: string; path: string; isDir: boolean }> = [];
 
-  const configFile = path.join(projectRoot, 'devstart.config.json');
+  const configFile = path.join(projectRoot, 'devset.config.json');
   if (fileExists(configFile)) {
-    targets.push({ label: 'DevStart configuration (devstart.config.json)', path: configFile, isDir: false });
+    targets.push({ label: 'DevSet configuration (devset.config.json)', path: configFile, isDir: false });
   }
 
   // Scan for .venv directories in root and immediate subdirs
@@ -38,7 +38,7 @@ export async function cleanCommand(options: GlobalCliOptions = {}): Promise<void
   } catch {}
 
   if (targets.length === 0) {
-    logger.info('No DevStart-generated virtual environments or configuration files found to clean.');
+    logger.info('No DevSet-generated virtual environments or configuration files found to clean.');
     return;
   }
 

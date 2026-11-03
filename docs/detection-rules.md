@@ -1,6 +1,6 @@
-# DevStart CLI — Detection Rules & Scoring Engine
+# DevSet CLI — Detection Rules & Scoring Engine
 
-DevStart CLI replaces opaque heuristics with a **deterministic scoring matrix**. Every signature provides additive points toward technology confirmation.
+DevSet CLI replaces opaque heuristics with a **deterministic scoring matrix**. Every signature provides additive points toward technology confirmation.
 
 ---
 

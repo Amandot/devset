@@ -3,14 +3,14 @@ import type { ComponentService } from '../types/project.js';
 import { readJsonSafe, writeFileSafe, fileExists } from '../utils/filesystem.js';
 import { logger } from '../utils/logger.js';
 
-export interface DevStartConfigFile {
+export interface DevSetConfigFile {
   version: string;
   projectName: string;
   services: ComponentService[];
 }
 
 export class ServiceRunner {
-  static readonly CONFIG_FILE = 'devstart.config.json';
+  static readonly CONFIG_FILE = 'devset.config.json';
 
   static saveConfig(
     projectRoot: string,
@@ -18,7 +18,7 @@ export class ServiceRunner {
     services: ComponentService[]
   ): boolean {
     const configPath = path.join(projectRoot, this.CONFIG_FILE);
-    const data: DevStartConfigFile = {
+    const data: DevSetConfigFile = {
       version: '1.0.0',
       projectName,
       services,
@@ -26,9 +26,9 @@ export class ServiceRunner {
     return writeFileSafe(configPath, JSON.stringify(data, null, 2));
   }
 
-  static loadConfig(projectRoot: string): DevStartConfigFile | null {
+  static loadConfig(projectRoot: string): DevSetConfigFile | null {
     const configPath = path.join(projectRoot, this.CONFIG_FILE);
-    return readJsonSafe<DevStartConfigFile>(configPath);
+    return readJsonSafe<DevSetConfigFile>(configPath);
   }
 
   static addScriptToPackageJson(projectRoot: string): boolean {
@@ -44,10 +44,10 @@ export class ServiceRunner {
       return true;
     }
 
-    pkg.scripts['dev:all'] = 'devstart run';
+    pkg.scripts['dev:all'] = 'devset run';
     const saved = writeFileSafe(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
     if (saved) {
-      logger.success('Added "dev:all": "devstart run" to package.json');
+      logger.success('Added "dev:all": "devset run" to package.json');
     }
     return saved;
   }

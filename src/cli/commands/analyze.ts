@@ -91,5 +91,5 @@ export async function analyzeCommand(
   }
 
   console.log();
-  logger.info('Run `devstart` or `devstart setup` to proceed with automated environment setup.');
+  logger.info('Run `devset` or `devset setup` to proceed with automated environment setup.');
 }

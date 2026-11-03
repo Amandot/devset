@@ -41,7 +41,7 @@ describe('Integration Scenarios', () => {
     expect(analysis.docker.hasCompose).toBe(true);
   });
 
-  it('Scenario 5: devstart.config.json persistence and loading', () => {
+  it('Scenario 5: devset.config.json persistence and loading', () => {
     const tempDir = path.resolve('examples/react-vite');
     const services = [{ name: 'web', command: 'npm', args: ['run', 'dev'], directory: '.' }];
 
