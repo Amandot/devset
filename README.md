@@ -1,4 +1,4 @@
-# DevSet CLI
+# DevSet
 
 > **One Command. Complete Setup.**  
 > Universal, deterministic, rule-based project analysis and automated environment setup tool.
@@ -29,7 +29,7 @@ git clone https://github.com/example/fullstack-app.git
 cd fullstack-app
 
 # Run DevSet
-npx devset-cli
+npx devset
 
 # Start all services together
 npm run dev:all
