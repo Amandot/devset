@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DevSet: one command, complete setup</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="#top">
+      <img src="logo.png" alt="DevSet Logo" class="logo-img">
+      <span>DevSet</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#try">Try it</a>
+      <a href="#detect">Detection</a>
+      <a href="#locks">Lockfiles</a>
+      <a href="#cmds">Commands</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn-gh" href="https://github.com/Amandot/devset" target="_blank" rel="noopener noreferrer" title="View DevSet on GitHub">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <span>GitHub</span>
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark mode" title="Toggle theme">
+        <span class="icon-sun">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </span>
+        <span class="icon-moon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div>
+    <h1>Clone a repo. Run one command. Start coding.</h1>
+    <p class="lead">DevSet reads your project, figures out what it needs, and sets it all up: Node packages, Python virtual environments, <code>.env</code> files, and one command to start every service. No AI, no network calls during analysis.</p>
+    <div class="row">
+      <a class="btn primary big" href="#try">Try the simulator</a>
+      <button class="btn big" data-copy="npx devset">Copy: npx devset</button>
+      <a class="btn big btn-hero-gh" href="https://github.com/Amandot/devset" target="_blank" rel="noopener noreferrer">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </div>
+  <div class="term" aria-label="Example DevSet session">
+    <div class="term-bar"><i></i><i></i><i></i></div>
+    <pre id="heroTerm" aria-live="off"></pre>
+  </div>
+</section>
+
+<section id="problem" class="block">
+  <h2>The problem it solves</h2>
+  <p class="sub">Every new repo costs 30 to 60 minutes of guessing. Tick what you have done by hand before, and watch the time add up.</p>
+  <div class="chores" id="chores"></div>
+  <div class="tally"><span>Time saved with DevSet</span><strong id="saved">0 min</strong></div>
+</section>
+
+<section id="how" class="block">
+  <h2>How it works</h2>
+  <p class="sub">DevSet runs seven stages in a fixed order. Click a stage to see what it does.</p>
+  <div class="pipe" id="pipe" role="tablist"></div>
+  <div class="card detail" id="pipeDetail" aria-live="polite"></div>
+</section>
+
+<section id="try" class="block">
+  <h2>Try it: run DevSet on a pretend project</h2>
+  <p class="sub">Pick a project and set what already exists on your machine. Then press Run and see the plan DevSet builds.</p>
+  <div class="sim">
+    <div class="card controls">
+      <label>Project
+        <select id="proj">
+          <option value="full">Fullstack: React (Vite) + Django</option>
+          <option value="next">Next.js app (pnpm)</option>
+          <option value="dj">Django API only</option>
+        </select>
+      </label>
+      <label class="chk"><input type="checkbox" id="hasEnv"> <span>A <code>.env</code> file already exists</span></label>
+      <label class="chk"><input type="checkbox" id="hasVenv"> <span>Python <code>.venv</code> already exists</span></label>
+      <label class="chk"><input type="checkbox" id="hasDeps"> <span>Dependencies already installed</span></label>
+      <label class="chk"><input type="checkbox" id="dry"> <span>Use <code>--dry-run</code> (change nothing)</span></label>
+      <button class="btn primary big" id="run">Run devset</button>
+      <button class="btn alt" id="reset">Clear output</button>
+      <p class="hint">Tip: tick all three "already exists" boxes to see the "already configured" result.</p>
+    </div>
+    <div class="term big-term">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <pre id="out">Press "Run devset" to start.</pre>
+      <div id="ask" class="row" hidden>
+        <button class="btn primary" id="yes">Yes, proceed</button><button class="btn alt" id="no">No, abort</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="detect" class="block">
+  <h2>How DevSet detects your tech</h2>
+  <p class="sub">Every clue adds points. Enough points and a technology is <b>confirmed</b>; a few points and it is only <b>possible</b>. Tick the files your project has.</p>
+  <div class="sim">
+    <div class="card controls" id="signals"></div>
+    <div class="card"><div id="bars"></div><p class="hint">Bars show the score. Marks show the "possible" and "confirmed" lines for each technology.</p></div>
+  </div>
+</section>
+
+<section id="locks" class="block">
+  <h2>Lockfiles decide the install command</h2>
+  <p class="sub">DevSet uses your lockfile so everyone installs the exact same versions. Two lockfiles in one folder is a conflict, and DevSet warns you.</p>
+  <div class="sim">
+    <div class="card controls" id="lockBox"></div>
+    <div class="card" id="lockRes" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="cmds" class="block">
+  <h2>Commands</h2>
+  <div class="tabs" id="tabs" role="tablist"></div>
+  <div class="card" id="cmdBody" aria-live="polite"></div>
+  <h3>Options that work on every command</h3>
+  <div class="opts" id="opts"></div>
+</section>
+
+<section id="safe" class="block">
+  <h2>Why it is safe to run</h2>
+  <div class="grid3" id="safety"></div>
+</section>
+</main>
+
+<footer>
+  <div class="footer-card">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="logo.png" alt="DevSet Logo" class="logo-img">
+        <strong>DevSet</strong>
+        <span class="badge">MIT Licensed</span>
+      </div>
+      <a class="btn btn-gh" href="https://github.com/Amandot/devset" target="_blank" rel="noopener noreferrer">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <span>Star on GitHub: Amandot/devset</span>
+      </a>
+    </div>
+    <p class="footer-copy">Run <code>devset doctor</code> to check your machine, then <code>devset</code> to configure and launch your services in seconds.</p>
+  </div>
+</footer>
+<div id="toast" role="status"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
