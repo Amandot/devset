@@ -9,6 +9,9 @@ const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const themeToggle = $('#themeToggle');
 function setTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
+  document.querySelectorAll('.logo-img').forEach(image => {
+    image.src = t === 'dark' ? 'white_logo.png' : 'logo.png';
+  });
   localStorage.setItem('devset-theme', t);
   if (hasGSAP && !reducedMotion && themeToggle) {
     gsap.fromTo(themeToggle, { rotate: -40, scale: 0.88 }, { rotate: 0, scale: 1, duration: 0.35, ease: 'back.out(2)' });
