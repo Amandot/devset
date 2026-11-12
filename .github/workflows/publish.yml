@@ -37,7 +37,7 @@ jobs:
           scope: '@amandot'
       - run: npm ci
       - run: npm run build
-      - run: npm pkg set name=@amandot/devset
+      - run: npm pkg set name=devset
       - run: npm publish --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
