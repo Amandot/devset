@@ -544,3 +544,325 @@ if (hasGSAP && !reducedMotion) {
     });
   });
 }
+
+/* ==================== DEVSET AI CHATBOT ==================== */
+(() => {
+  const CHATBOT_WEBHOOK = 'https://cloud.activepieces.com/api/v1/webhooks/xvJdHvwMGdWdxNE3JbZNr/sync';
+  const STORAGE_KEY = 'devset_chat_history_v1';
+
+  const widget = $('#chatbotWidget');
+  const toggleBtn = $('#chatbotToggle');
+  const navBtn = $('#navAiBtn');
+  const closeBtn = $('#chatbotClose');
+  const clearBtn = $('#chatbotClear');
+  const messagesEl = $('#chatbotMessages');
+  const form = $('#chatbotForm');
+  const input = $('#chatbotInput');
+  const sendBtn = $('#chatbotSend');
+
+  if (!widget || !toggleBtn || !form || !input) return;
+
+  let isOpen = false;
+  let isSending = false;
+  let chatHistory = [];
+
+  const defaultWelcomeHTML = `
+    <div class="chatbot-welcome">
+      <h4>Hi! I'm DevSetAI</h4>
+      <p>I'm an AI assistant trained on DevSet documentation. Ask me about how DevSet works, supported frameworks, commands, virtual environments, or safety rules.</p>
+      <div class="chatbot-chips-title">Suggested questions:</div>
+      <div class="chatbot-chips">
+        <button class="chatbot-chip" type="button" data-prompt="What is DevSet and what problem does it solve?">What is DevSet?</button>
+        <button class="chatbot-chip" type="button" data-prompt="How do I get started with DevSet on my repo?">How do I run it?</button>
+        <button class="chatbot-chip" type="button" data-prompt="Does DevSet work with Django and Python virtual environments?">Django & Python?</button>
+        <button class="chatbot-chip" type="button" data-prompt="How does DevSet detect project tech and lockfiles?">How does detection work?</button>
+        <button class="chatbot-chip" type="button" data-prompt="Why is DevSet safe to run? Does it use AI or make network calls?">Is it safe to run?</button>
+      </div>
+    </div>
+  `;
+
+  // Load chat history from sessionStorage
+  try {
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      chatHistory = JSON.parse(saved) || [];
+    }
+  } catch (err) {
+    chatHistory = [];
+  }
+
+  function saveHistory() {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
+    } catch {}
+  }
+
+  function scrollToBottom(smooth = true) {
+    if (!messagesEl) return;
+    messagesEl.scrollTo({
+      top: messagesEl.scrollHeight,
+      behavior: smooth ? 'smooth' : 'auto'
+    });
+  }
+
+  // Format message text: escape, linkify URLs, format commands/code
+  function formatReply(text) {
+    if (!text) return '';
+    let out = esc(text);
+
+    // Links: https://...
+    out = out.replace(/(https?:\/\/[^\s<]+)/g, url => {
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+    });
+
+    // Inline backtick code: `cmd`
+    out = out.replace(/`([^`]+)`/g, (m, code) => {
+      return `<code class="chat-cmd-pill" data-copy="${code}" title="Click to copy">${code}</code>`;
+    });
+
+    // Match common naked DevSet CLI commands that aren't already wrapped in code
+    const devsetCmdRegex = /\b(npx devset|devset analyze|devset setup|devset doctor|devset run|devset clean|npm run dev:all)\b/g;
+    out = out.replace(devsetCmdRegex, m => {
+      return `<code class="chat-cmd-pill" data-copy="${m}" title="Click to copy">${m}</code>`;
+    });
+
+    // Newlines to <br>
+    out = out.replace(/\n{2,}/g, '<br><br>').replace(/\n/g, '<br>');
+
+    return out;
+  }
+
+  function formatTime(isoOrDate) {
+    const d = isoOrDate ? new Date(isoOrDate) : new Date();
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function renderMessages() {
+    if (!messagesEl) return;
+    if (chatHistory.length === 0) {
+      messagesEl.innerHTML = defaultWelcomeHTML;
+      return;
+    }
+
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const logoSrc = currentTheme === 'dark' ? 'white_logo.png' : 'logo.png';
+
+    let html = '';
+    for (const msg of chatHistory) {
+      if (msg.role === 'user') {
+        html += `
+          <div class="chat-row user">
+            <div class="chat-bubble">
+              <div>${esc(msg.text).replace(/\n/g, '<br>')}</div>
+              <div class="chat-time">${formatTime(msg.time)}</div>
+            </div>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="chat-row bot">
+            <div class="chat-avatar-mini">
+              <img src="${logoSrc}" alt="DevSet AI" class="logo-img">
+            </div>
+            <div class="chat-bubble">
+              <div>${formatReply(msg.text)}</div>
+              <div class="chat-time">${formatTime(msg.time)}</div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    messagesEl.innerHTML = html;
+    scrollToBottom(false);
+  }
+
+  function appendTypingIndicator() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const logoSrc = currentTheme === 'dark' ? 'white_logo.png' : 'logo.png';
+
+    const typingEl = document.createElement('div');
+    typingEl.className = 'chat-row bot typing-row';
+    typingEl.id = 'chatbotTyping';
+    typingEl.innerHTML = `
+      <div class="chat-avatar-mini">
+        <img src="${logoSrc}" alt="DevSet AI" class="logo-img">
+      </div>
+      <div class="chat-bubble">
+        <div class="typing-dots" aria-label="DevSet AI is thinking">
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+        </div>
+      </div>
+    `;
+    messagesEl.appendChild(typingEl);
+    scrollToBottom(true);
+  }
+
+  function removeTypingIndicator() {
+    const t = $('#chatbotTyping');
+    if (t) t.remove();
+  }
+
+  async function sendMessage(text) {
+    const trimmed = (text || '').trim();
+    if (!trimmed || isSending) return;
+
+    isSending = true;
+    input.value = '';
+    input.style.height = 'auto';
+    sendBtn.disabled = true;
+
+    // Push user message
+    const userMsg = {
+      role: 'user',
+      text: trimmed,
+      time: new Date().toISOString()
+    };
+    chatHistory.push(userMsg);
+    saveHistory();
+    renderMessages();
+    appendTypingIndicator();
+
+    try {
+      const response = await fetch(CHATBOT_WEBHOOK, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: trimmed })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server returned HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      const botReply = (data && data.reply) ? data.reply : (typeof data === 'string' ? data : 'I received your request, but no reply text was returned.');
+
+      removeTypingIndicator();
+
+      const botMsg = {
+        role: 'bot',
+        text: botReply,
+        time: new Date().toISOString()
+      };
+      chatHistory.push(botMsg);
+      saveHistory();
+      renderMessages();
+    } catch (err) {
+      console.error('Chatbot error:', err);
+      removeTypingIndicator();
+
+      const errorMsg = {
+        role: 'bot',
+        text: "I couldn't reach the DevSet assistant right now. Please check your internet connection or try again.",
+        time: new Date().toISOString(),
+        isError: true
+      };
+      chatHistory.push(errorMsg);
+      saveHistory();
+      renderMessages();
+    } finally {
+      isSending = false;
+      sendBtn.disabled = false;
+      if (isOpen) {
+        input.focus();
+      }
+    }
+  }
+
+  function openChat() {
+    isOpen = true;
+    widget.classList.add('open');
+    toggleBtn.classList.add('open');
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    widget.setAttribute('aria-hidden', 'false');
+
+    if (hasGSAP && !reducedMotion) {
+      gsap.fromTo(widget, { opacity: 0, y: 22, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.28, ease: 'back.out(1.5)' });
+    }
+
+    renderMessages();
+    setTimeout(() => {
+      input.focus();
+      scrollToBottom(false);
+    }, 120);
+  }
+
+  function closeChat() {
+    isOpen = false;
+    toggleBtn.classList.remove('open');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    widget.setAttribute('aria-hidden', 'true');
+
+    if (hasGSAP && !reducedMotion) {
+      gsap.to(widget, {
+        opacity: 0,
+        y: 16,
+        scale: 0.95,
+        duration: 0.2,
+        ease: 'power2.in',
+        onComplete: () => {
+          widget.classList.remove('open');
+        }
+      });
+    } else {
+      widget.classList.remove('open');
+    }
+  }
+
+  function toggleChat() {
+    if (isOpen) closeChat();
+    else openChat();
+  }
+
+  // Event Listeners
+  toggleBtn.addEventListener('click', toggleChat);
+  if (navBtn) navBtn.addEventListener('click', openChat);
+  closeBtn.addEventListener('click', closeChat);
+
+  clearBtn.addEventListener('click', () => {
+    chatHistory = [];
+    sessionStorage.removeItem(STORAGE_KEY);
+    renderMessages();
+    toast('Chat history cleared');
+  });
+
+  // Suggestion chips delegation
+  messagesEl.addEventListener('click', e => {
+    const chip = e.target.closest('.chatbot-chip');
+    if (chip && chip.dataset.prompt) {
+      sendMessage(chip.dataset.prompt);
+    }
+  });
+
+  // Auto-resize textarea & submit on Enter
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 110) + 'px';
+  });
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      form.requestSubmit();
+    }
+  });
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    sendMessage(input.value);
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && isOpen) {
+      closeChat();
+    }
+  });
+
+  // Initial render of chat state
+  renderMessages();
+})();
