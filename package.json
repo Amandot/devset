@@ -1,6 +1,6 @@
 {
   "name": "devset",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Universal, rule-based project analysis and automated environment setup tool",
   "author": "Devset Team",
   "license": "MIT",
