@@ -1,12 +1,13 @@
-name: Publish to npm
+name: Publish to GitHub Packages
 
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 permissions:
   contents: read
-  id-token: write
+  packages: write
 
 jobs:
   publish:
@@ -16,7 +17,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          registry-url: https://registry.npmjs.org
-      - run: npm install -g npm@latest
+          registry-url: https://npm.pkg.github.com
+          scope: '@amandot'
       - run: npm ci
-      - run: npm publish --access public
+      - run: npm pkg set name=@amandot/devset
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
