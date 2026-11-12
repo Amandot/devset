@@ -1,11 +1,21 @@
 {
   "name": "devset",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Universal, rule-based project analysis and automated environment setup tool",
   "author": "Devset Team",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amandot/devset.git"
+  },
+  "homepage": "https://dev-set.vercel.app",
+  "bugs": {
+    "url": "https://github.com/Amandot/devset/issues"
+  },
   "keywords": [
     "cli",
+    "devset",
+    "developer-tools",
     "project-setup",
     "environment-setup",
     "developer-tooling",
