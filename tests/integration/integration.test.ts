@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import { ProjectAnalyzer } from '../../src/analyzers/project-analyzer.js';
 import { PlanGenerator } from '../../src/core/plan-generator.js';
 import { ServiceRunner } from '../../src/runner/service-runner.js';
+import { PACKAGE_VERSION } from '../../src/utils/version.js';
 
 describe('Integration Scenarios', () => {
   it('Scenario 1: React + Vite project', async () => {
@@ -57,6 +58,7 @@ describe('Integration Scenarios', () => {
     expect(saved).toBe(true);
 
     const loaded = ServiceRunner.loadConfig(tempDir);
+    expect(loaded?.version).toBe(PACKAGE_VERSION);
     expect(loaded?.projectName).toBe('test-project');
     expect(loaded?.services[0].name).toBe('web');
 

@@ -11,13 +11,14 @@ import {
   yesOption,
   jsonOption,
 } from './options.js';
+import { PACKAGE_VERSION } from '../utils/version.js';
 
 const program = new Command();
 
 program
   .name('devset')
   .description('Universal, rule-based project analysis and automated environment setup tool')
-  .version('1.0.0');
+  .version(PACKAGE_VERSION);
 
 // Global options
 program.addOption(dryRunOption);

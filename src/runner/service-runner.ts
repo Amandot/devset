@@ -2,6 +2,7 @@ import path from 'node:path';
 import type { ComponentService } from '../types/project.js';
 import { readJsonSafe, writeFileSafe, fileExists } from '../utils/filesystem.js';
 import { logger } from '../utils/logger.js';
+import { PACKAGE_VERSION } from '../utils/version.js';
 
 export interface DevSetConfigFile {
   version: string;
@@ -19,7 +20,7 @@ export class ServiceRunner {
   ): boolean {
     const configPath = path.join(projectRoot, this.CONFIG_FILE);
     const data: DevSetConfigFile = {
-      version: '1.0.0',
+      version: PACKAGE_VERSION,
       projectName,
       services,
     };
