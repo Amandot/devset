@@ -103,7 +103,7 @@ SETUP PLAN
 
 | Command | Description |
 |---|---|
-| `devset` (or `npx devset-cli`) | Scan project, generate plan, and perform automated setup upon approval |
+| `devset` (or `npx devset`) | Scan project, generate plan, and perform automated setup upon approval |
 | `devset analyze [dir]` | In-depth scan and tabular report of languages, frameworks, and manifests |
 | `devset setup [dir]` | Execute automated dependency setup |
 | `devset doctor` | Check health and versions of Node, Python, package managers, and tools |
@@ -162,8 +162,8 @@ See [docs/supported-technologies.md](docs/supported-technologies.md) for the com
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/devset-cli.git
-cd devset-cli
+git clone https://github.com/your-username/devset.git
+cd devset
 
 # Install development dependencies
 npm install
